@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile – Mostra</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+    <div class="container">
+      <div class="profile-layout">
+
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+          <div class="profile-card">
+            <div class="profile-card__avatar">🧑</div>
+            <h2 class="profile-card__name">Ahmed Ali</h2>
+            <p class="profile-card__email">ahmed@example.com</p>
+            <div class="profile-card__stats">
+              <div class="stat"><div class="stat__num">12</div><div class="stat__label">Orders</div></div>
+              <div class="stat"><div class="stat__num">8</div><div class="stat__label">Wishlist</div></div>
+              <div class="stat"><div class="stat__num">4.9</div><div class="stat__label">Rating</div></div>
+            </div>
+          </div>
+
+          <nav class="profile-nav">
+            <button class="profile-nav__item active" onclick="switchTab('profile',this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              My Profile
+            </button>
+            <button class="profile-nav__item" onclick="switchTab('orders',this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              My Orders
+            </button>
+            <button class="profile-nav__item" onclick="switchTab('wishlist',this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              Wishlist
+            </button>
+            <button class="profile-nav__item" onclick="switchTab('settings',this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Settings
+            </button>
+            <button class="profile-nav__item profile-nav__item--danger" onclick="window.location.href='login.html'">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Sign Out
+            </button>
+          </nav>
+        </aside>
+
+        <!-- Content -->
+        <div class="profile-content">
+          <div id="tab-profile" class="tab-panel">
+            <div class="content-card">
+              <h2 class="content-title">My Profile</h2>
+              <form class="profile-form" onsubmit="return false">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input class="input" value="Ahmed" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input class="input" value="Ali" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <input class="input" type="email" value="ahmed@example.com" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone Number</label>
+                  <input class="input" type="tel" value="+20 100 000 0000" />
+                </div>
+
+                <!-- Saved Addresses -->
+                <div class="subsection">
+                  <h3>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Saved Addresses
+                  </h3>
+                  <div class="address-card">
+                    <div class="address-card__header">
+                      <span class="badge badge-primary">Default</span>
+                      <button class="link-btn">Edit</button>
+                    </div>
+                    <p class="address-card__label">Home</p>
+                    <p class="address-card__detail">123 Tahrir Square, Dokki<br>Cairo, 12511, Egypt</p>
+                  </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="subsection">
+                  <h3>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                      <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    Payment Methods
+                  </h3>
+                  <div class="payment-card">
+                    <div class="payment-card__brand">VISA</div>
+                    <div>
+                      <p class="payment-card__num">•••• •••• •••• 4242</p>
+                      <p class="payment-card__exp">Expires 05/28</p>
+                    </div>
+                    <button class="link-btn" style="margin-left:auto">Edit</button>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn btn-primary btn-md" type="submit" onclick="Cart.showToast('Profile saved!')">Save Changes</button>
+                  <button class="btn btn-outline btn-md" type="button">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div id="tab-orders" class="tab-panel" style="display:none">
+            <div class="content-card">
+              <h2 class="content-title">My Orders</h2>
+              <div class="orders-list" id="orders-list">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-wishlist" class="tab-panel" style="display:none">
+            <div class="content-card">
+              <h2 class="content-title">Wishlist</h2>
+              <div class="wishlist-grid" id="wishlist-grid">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-settings" class="tab-panel" style="display:none">
+            <div class="content-card">
+              <h2 class="content-title">Settings</h2>
+              <div class="settings-sections">
+                <div>
+                  <h3 class="settings-title">Notifications</h3>
+                  <div class="settings-options">
+                    <div class="settings-row"><label>Order updates via email</label><input type="checkbox" checked /></div>
+                    <div class="settings-row"><label>Promotional emails</label><input type="checkbox" /></div>
+                    <div class="settings-row"><label>New arrivals alerts</label><input type="checkbox" checked /></div>
+                    <div class="settings-row"><label>Price drop notifications</label><input type="checkbox" checked /></div>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="settings-title">Privacy</h3>
+                  <div class="settings-options">
+                    <div class="settings-row"><label>Share purchase history with brands</label><input type="checkbox" /></div>
+                    <div class="settings-row"><label>Allow personalized recommendations</label><input type="checkbox" checked /></div>
+                  </div>
+                </div>
+                <div class="danger-zone">
+                  <h3 class="settings-title" style="color:var(--destructive)">Danger Zone</h3>
+                  <button class="btn btn-outline btn-md" style="border-color:var(--destructive);color:var(--destructive)">
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

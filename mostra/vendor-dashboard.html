@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendor Dashboard – Mostra</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* ===========================
+       VENDOR DASHBOARD
+       =========================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background: var(--background); color: var(--foreground); display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .vd-sidebar {
+      width: 16rem; background: var(--card); border-right: 1px solid var(--border);
+      flex-shrink: 0; position: fixed; top: 0; bottom: 0; left: 0;
+      display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform .3s;
+    }
+    @media (min-width: 1024px) { .vd-sidebar { transform: none; } }
+    .vd-sidebar.open { transform: translateX(0); }
+
+    .vd-logo { padding: 1.5rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .vd-logo-icon { width: 2rem; height: 2rem; background: var(--primary); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 1.25rem; }
+    .vd-logo span { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+
+    .vd-nav { padding: 0 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
+    .vd-nav-item {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+      border-radius: 0.5rem; font-size: 1rem; font-weight: 500; cursor: pointer; border: none;
+      background: transparent; color: var(--text-secondary); transition: all .2s; width: 100%; text-align: left;
+    }
+    .vd-nav-item:hover { background: var(--surface-hover); }
+    .vd-nav-item.active { background: var(--primary); color: #fff; }
+    .vd-nav-item svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+
+    .vd-profile { padding: 1rem; margin-top: auto; }
+    .vd-profile-card { background: var(--surface); border-radius: 0.5rem; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .vd-avatar { width: 2.5rem; height: 2.5rem; border-radius: 9999px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+    .vd-profile-name { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
+    .vd-profile-label { font-size: 0.75rem; color: var(--text-secondary); }
+
+    /* Main */
+    .vd-main { flex: 1; margin-left: 0; display: flex; flex-direction: column; }
+    @media (min-width: 1024px) { .vd-main { margin-left: 16rem; } }
+
+    .vd-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .vd-header-left h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+    .vd-header-left p { font-size: 0.875rem; color: var(--text-secondary); }
+    .vd-header-right { display: flex; align-items: center; gap: 1rem; }
+
+    .vd-menu-btn { display: flex; padding: 0.5rem; border-radius: 0.5rem; color: var(--text-secondary); cursor: pointer; }
+    @media (min-width: 1024px) { .vd-menu-btn { display: none; } }
+    .vd-menu-btn svg { width: 1.25rem; height: 1.25rem; }
+
+    /* Theme toggle */
+    .vd-theme-btn { padding: 0.5rem; border-radius: 0.5rem; color: var(--text-secondary); cursor: pointer; border: none; background: none; transition: background .2s; }
+    .vd-theme-btn:hover { background: var(--surface-hover); }
+    .vd-theme-btn svg { width: 1.25rem; height: 1.25rem; display: block; }
+
+    .vd-content { flex: 1; padding: 2rem; overflow-y: auto; }
+
+    /* Tab panels */
+    .vd-tab { display: none; }
+    .vd-tab.active { display: block; }
+
+    /* Stats grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+    @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; }
+    .stat-card__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .stat-icon { width: 3rem; height: 3rem; border-radius: 0.5rem; background: var(--surface); display: flex; align-items: center; justify-content: center; }
+    .stat-icon svg { width: 1.5rem; height: 1.5rem; }
+    .stat-card h3 { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+    .stat-card p { font-size: 0.875rem; color: var(--text-secondary); }
+
+    /* Charts */
+    .charts-row { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    @media (min-width: 1024px) { .charts-row { grid-template-columns: repeat(2, 1fr); } }
+    .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; }
+    .chart-card h3 { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; }
+    .chart-area { height: 10rem; display: flex; align-items: flex-end; gap: 0.5rem; padding: 1rem; background: var(--surface); border-radius: 0.5rem; }
+    .chart-bar { flex: 1; background: var(--primary); border-radius: 0.25rem 0.25rem 0 0; opacity: 0.8; transition: opacity .2s; min-height: 0.25rem; }
+    .chart-bar:hover { opacity: 1; }
+
+    /* Orders table */
+    .table-card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; }
+    .table-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .table-header h3 { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    thead th { padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); border-bottom: 1px solid var(--border); background: var(--surface); }
+    tbody td { padding: 1rem; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--surface); }
+
+    /* Products grid */
+    .products-manage { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    @media (min-width: 768px) { .products-manage { grid-template-columns: repeat(3, 1fr); } }
+    .product-manage-card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
+    .product-manage-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: var(--surface); }
+    .product-manage-body { padding: 1rem; }
+    .product-manage-name { font-size: 0.9375rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.25rem; }
+    .product-manage-price { font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem; }
+    .product-manage-actions { display: flex; gap: 0.5rem; }
+
+    /* Overlay */
+    .vd-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 40; }
+    .vd-overlay.show { display: block; }
+
+    /* Btn helpers */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 0.5rem; font-weight: 500; font-size: 0.9375rem; cursor: pointer; border: none; transition: all .2s; font-family: inherit; }
+    .btn-primary { background: var(--primary); color: #fff; padding: 0.5rem 1rem; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); padding: 0.5rem 1rem; }
+    .btn-outline:hover { background: var(--surface-hover); }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.875rem; }
+    .badge { display: inline-flex; align-items: center; padding: 0.125rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+    .badge-success { background: var(--success); color: var(--success-foreground); }
+    .badge-warning { background: var(--warning); color: #fff; }
+    .badge-destructive { background: var(--destructive); color: var(--destructive-foreground); }
+    .badge-default { background: var(--secondary); color: var(--secondary-foreground); }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="vd-sidebar" id="vd-sidebar">
+    <div class="vd-logo">
+      <div class="vd-logo-icon">M</div>
+      <span>Mostra</span>
+    </div>
+    <nav class="vd-nav">
+      <button class="vd-nav-item active" onclick="showTab('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="vd-nav-item" onclick="showTab('products',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Products
+      </button>
+      <button class="vd-nav-item" onclick="showTab('orders',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Orders
+      </button>
+      <button class="vd-nav-item" onclick="showTab('analytics',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </button>
+      <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
+      <a href="index.html" class="vd-nav-item" style="text-decoration:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Back to Store
+      </a>
+    </nav>
+    <div class="vd-profile">
+      <div class="vd-profile-card">
+        <div class="vd-avatar">A</div>
+        <div>
+          <div class="vd-profile-name">Ahmed's Brand</div>
+          <div class="vd-profile-label">Verified Vendor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="vd-overlay" id="vd-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main -->
+  <div class="vd-main">
+    <header class="vd-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button class="vd-menu-btn" onclick="openSidebar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="vd-header-left">
+          <h1 id="tab-title">Dashboard</h1>
+          <p>Welcome back, Ahmed!</p>
+        </div>
+      </div>
+      <div class="vd-header-right">
+        <button class="vd-theme-btn" onclick="ThemeManager.toggle()" data-theme-toggle>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          </svg>
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="alert('Add product form coming soon!')">
+          + New Product
+        </button>
+      </div>
+    </header>
+
+    <div class="vd-content">
+
+      <!-- Dashboard Tab -->
+      <div class="vd-tab active" id="tab-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__header">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <span class="badge badge-success">+12%</span>
+            </div>
+            <h3>$4,280</h3><p>Total Revenue</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__header">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <span class="badge badge-success">+8%</span>
+            </div>
+            <h3>142</h3><p>Total Orders</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__header">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+              <span class="badge badge-default">Stable</span>
+            </div>
+            <h3>28</h3><p>Active Products</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__header">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <span class="badge badge-success">+22%</span>
+            </div>
+            <h3>1,840</h3><p>Customers</p>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <h3>Monthly Revenue</h3>
+            <div class="chart-area" id="revenue-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Orders by Category</h3>
+            <div class="chart-area" id="category-chart"></div>
+          </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Recent Orders</h3>
+            <button class="btn btn-outline btn-sm" onclick="showTab('orders',null)">View All</button>
+          </div>
+          <div class="table-wrap" id="recent-orders-table"></div>
+        </div>
+      </div>
+
+      <!-- Products Tab -->
+      <div class="vd-tab" id="tab-products">
+        <div class="products-manage" id="manage-products-grid"></div>
+      </div>
+
+      <!-- Orders Tab -->
+      <div class="vd-tab" id="tab-orders">
+        <div class="table-card">
+          <div class="table-header">
+            <h3>All Orders</h3>
+            <span style="font-size:.875rem;color:var(--text-secondary)">142 total</span>
+          </div>
+          <div class="table-wrap" id="orders-full-table"></div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div class="vd-tab" id="tab-analytics">
+        <div class="charts-row" style="grid-template-columns:1fr">
+          <div class="chart-card">
+            <h3>Revenue Over Time (Last 12 Months)</h3>
+            <div class="chart-area" id="analytics-chart" style="height:14rem"></div>
+          </div>
+        </div>
+        <div class="stats-grid" style="margin-top:1.5rem">
+          <div class="stat-card"><div class="stat-card__header"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div></div><h3>8,420</h3><p>Page Views</p></div>
+          <div class="stat-card"><div class="stat-card__header"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div><h3>3.2%</h3><p>Conversion Rate</p></div>
+          <div class="stat-card"><div class="stat-card__header"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div><h3>312</h3><p>Wishlist Saves</p></div>
+          <div class="stat-card"><div class="stat-card__header"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><h3>4.8</h3><p>Average Rating</p></div>
+        </div>
+      </div>
+
+    </div><!-- /vd-content -->
+  </div><!-- /vd-main -->
+
+  <script src="js/main.js"></script>
+  <script>
+    const ORDERS_DATA = [
+      { id:'MST-901', customer:'Sara Ahmed', product:'Leather Wallet', date:'May 5, 2026', total:49.99, status:'Delivered' },
+      { id:'MST-900', customer:'Omar Hassan', product:'Ceramic Mug Set', date:'May 4, 2026', total:34.99, status:'Shipped' },
+      { id:'MST-899', customer:'Layla Khalil', product:'Soy Candle', date:'May 3, 2026', total:18.99, status:'Processing' },
+      { id:'MST-898', customer:'Karim Nour', product:'Cotton Tote', date:'May 2, 2026', total:24.99, status:'Delivered' },
+      { id:'MST-897', customer:'Nadia Farouk', product:'Bamboo Board', date:'May 1, 2026', total:29.99, status:'Cancelled' },
+    ];
+
+    const MANAGE_PRODUCTS = [
+      { name:'Leather Wallet', price:49.99, img:'https://images.unsplash.com/photo-1627123424574-724758594785?w=400&q=80', stock:15 },
+      { name:'Ceramic Mug Set', price:34.99, img:'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&q=80', stock:8 },
+      { name:'Soy Candle', price:18.99, img:'https://images.unsplash.com/photo-1603905753049-1c5b1f93cadf?w=400&q=80', stock:22 },
+      { name:'Cotton Tote', price:24.99, img:'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&q=80', stock:30 },
+      { name:'Bamboo Board', price:29.99, img:'https://images.unsplash.com/photo-1591769225440-811ad7d6eab3?w=400&q=80', stock:5 },
+      { name:'Desk Organizer', price:54.99, img:'https://images.unsplash.com/photo-1593642532400-2682810df593?w=400&q=80', stock:12 },
+    ];
+
+    const BADGE_CLS = { Delivered:'badge-success', Shipped:'badge-warning', Processing:'badge-default', Cancelled:'badge-destructive' };
+
+    function ordersTableHTML(data) {
+      return `<table>
+        <thead><tr>
+          <th>Order ID</th><th>Customer</th><th>Product</th>
+          <th>Date</th><th>Total</th><th>Status</th><th>Actions</th>
+        </tr></thead>
+        <tbody>${data.map(o => `<tr>
+          <td><strong>${o.id}</strong></td>
+          <td>${o.customer}</td>
+          <td>${o.product}</td>
+          <td>${o.date}</td>
+          <td><strong>$${o.total.toFixed(2)}</strong></td>
+          <td><span class="badge ${BADGE_CLS[o.status]}">${o.status}</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+    }
+
+    function buildBar(pct, max) {
+      const h = Math.max(4, (pct / max) * 100);
+      return `<div class="chart-bar" style="height:${h}%" title="${pct}"></div>`;
+    }
+
+    function renderDashboard() {
+      // Charts
+      const rev = [320,280,410,390,520,480,610,570,730,680,820,750];
+      const maxRev = Math.max(...rev);
+      document.getElementById('revenue-chart').innerHTML = rev.map(v => buildBar(v, maxRev)).join('');
+
+      const cats = [45,30,15,10];
+      const maxCat = Math.max(...cats);
+      document.getElementById('category-chart').innerHTML = cats.map(v => buildBar(v, maxCat)).join('');
+
+      document.getElementById('recent-orders-table').innerHTML = ordersTableHTML(ORDERS_DATA.slice(0,4));
+      document.getElementById('orders-full-table').innerHTML  = ordersTableHTML(ORDERS_DATA);
+
+      document.getElementById('manage-products-grid').innerHTML = MANAGE_PRODUCTS.map(p => `
+        <div class="product-manage-card">
+          <img class="product-manage-img" src="${p.img}" alt="${p.name}"
+               onerror="this.src='https://placehold.co/300x300/ececf0/717182?text=?'">
+          <div class="product-manage-body">
+            <p class="product-manage-name">${p.name}</p>
+            <p class="product-manage-price">$${p.price.toFixed(2)} · ${p.stock} in stock</p>
+            <div class="product-manage-actions">
+              <button class="btn btn-outline btn-sm">Edit</button>
+              <button class="btn btn-outline btn-sm" style="color:var(--destructive);border-color:var(--destructive)">Delete</button>
+            </div>
+          </div>
+        </div>`).join('');
+
+      const an = [280,310,380,350,430,400,510,480,620,590,710,680];
+      const maxAn = Math.max(...an);
+      document.getElementById('analytics-chart').innerHTML = an.map(v => buildBar(v, maxAn)).join('');
+    }
+
+    function showTab(name, btn) {
+      document.querySelectorAll('.vd-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      document.querySelectorAll('.vd-nav-item').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const titles = { dashboard:'Dashboard', products:'Products', orders:'Orders', analytics:'Analytics' };
+      document.getElementById('tab-title').textContent = titles[name] || name;
+      closeSidebar();
+    }
+
+    function openSidebar()  { document.getElementById('vd-sidebar').classList.add('open'); document.getElementById('vd-overlay').classList.add('show'); }
+    function closeSidebar() { document.getElementById('vd-sidebar').classList.remove('open'); document.getElementById('vd-overlay').classList.remove('show'); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      ThemeManager.init();
+      renderDashboard();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mostra – Shop Local Brands</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+  <!-- Navbar injected by components.js -->
+  <div id="navbar"></div>
+
+  <main>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero__grid">
+
+          <!-- Left: Content -->
+          <div>
+            <h1 class="hero__heading">
+              Discover Local<br>Brands Near You
+            </h1>
+            <p class="hero__desc">
+              Support your community by shopping from local artisans and businesses. Quality products, authentic stories, delivered to your door.
+            </p>
+            <div class="hero__buttons">
+              <a href="explore.html" class="btn btn-primary btn-lg">
+                Start Shopping
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="vendors.html" class="btn btn-outline btn-lg">
+                Become a Vendor
+              </a>
+            </div>
+            <div class="hero__stats">
+              <div>
+                <div class="hero__stat-number">500+</div>
+                <div class="hero__stat-label">Local Brands</div>
+              </div>
+              <div>
+                <div class="hero__stat-number">10K+</div>
+                <div class="hero__stat-label">Products</div>
+              </div>
+              <div>
+                <div class="hero__stat-number">50K+</div>
+                <div class="hero__stat-label">Happy Customers</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Image -->
+          <div class="hero__image-wrap">
+            <img
+              class="hero__image"
+              src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=700&q=80"
+              alt="Shop local brands"
+            />
+            <div class="hero__floating-card">
+              <div class="hero__floating-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="hero__floating-title">Verified Sellers</div>
+                <div class="hero__floating-sub">100% Authentic</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORIES ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title">Shop by Category</h2>
+            <p class="section__subtitle">Find what you're looking for</p>
+          </div>
+          <a href="categories.html" class="section__view-all">
+            View All
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="categories-grid" id="categories-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURED PRODUCTS ===== -->
+    <section class="section section--surface">
+      <div class="container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title">Featured Products</h2>
+            <p class="section__subtitle">Handpicked for you</p>
+          </div>
+          <a href="explore.html" class="section__view-all">
+            View All
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+        <div class="products-grid" id="featured-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEW ARRIVALS ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="section__header">
+          <div class="section__title-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+            <h2 class="section__title" style="margin-bottom:0">New Arrivals</h2>
+          </div>
+          <a href="explore.html?sort=newest" class="section__view-all">
+            View All
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+        <div class="products-grid" id="new-arrivals-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TOP BRANDS ===== -->
+    <section class="section section--surface">
+      <div class="container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title">Top Local Brands</h2>
+            <p class="section__subtitle">Supporting businesses in your community</p>
+          </div>
+          <a href="brands.html" class="section__view-all">
+            View All
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+        <div class="brands-grid" id="brands-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-section__inner">
+          <h2 class="cta-section__title">Ready to Sell Your Products?</h2>
+          <p class="cta-section__desc">
+            Join thousands of local vendors on Mostra and reach customers who care about supporting local businesses.
+          </p>
+          <a href="vendors.html" class="cta-section__btn">
+            Become a Vendor
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer injected by components.js -->
+  <div id="footer"></div>
+
+  <!-- Scripts -->
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

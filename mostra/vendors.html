@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Become a Vendor – Mostra</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/vendor.css" />
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+    <div class="vendor-page">
+
+      <!-- Header -->
+      <div class="vendor-header">
+        <a href="index.html" class="navbar__logo" style="justify-content:center;margin-bottom:1rem">
+          <div class="navbar__logo-icon"><span>M</span></div>
+          <span class="navbar__logo-text">Mostra</span>
+        </a>
+        <h1 class="vendor-header__title">Become a Vendor</h1>
+        <p class="vendor-header__sub">Join thousands of local brands selling on Mostra</p>
+      </div>
+
+      <!-- Steps -->
+      <div class="vendor-steps" id="vendor-steps"></div>
+
+      <!-- Form card -->
+      <div class="vendor-form-card" id="vendor-form">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Benefits -->
+      <div class="vendor-benefits" id="vendor-benefits">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h4>500K+ Customers</h4>
+          <p>Reach a massive audience actively looking for local brands</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h4>Low Fees</h4>
+          <p>Only 5% commission — keep 95% of every sale you make</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <h4>Analytics Dashboard</h4>
+          <p>Track sales, views, and customer behavior in real time</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let vStep = 1;
+    const VSTEPS = ['Personal Info', 'Business Info', 'Documents', 'Done'];
+
+    function renderVSteps() {
+      document.getElementById('vendor-steps').innerHTML = `
+        <div class="vs-row">
+          ${VSTEPS.map((s, i) => {
+            const n = i + 1;
+            const cls = n < vStep ? 'done' : n === vStep ? 'active' : 'inactive';
+            return `
+              <div class="vs-item">
+                <div class="vs-circle ${cls}">${n < vStep ? '✓' : n}</div>
+                ${i < VSTEPS.length - 1 ? `<div class="vs-line ${n < vStep ? 'done' : 'inactive'}"></div>` : ''}
+              </div>`;
+          }).join('')}
+        </div>
+        <div class="vs-labels">
+          ${VSTEPS.map((s, i) => `<span class="${i+1 === vStep ? 'active' : ''}">${s}</span>`).join('')}
+        </div>`;
+    }
+
+    function renderVStep() {
+      renderVSteps();
+      const card = document.getElementById('vendor-form');
+      const benefits = document.getElementById('vendor-benefits');
+      if (vStep === 4) { benefits.style.display = 'none'; }
+      if (vStep === 1) renderVStep1(card);
+      else if (vStep === 2) renderVStep2(card);
+      else if (vStep === 3) renderVStep3(card);
+      else renderVSuccess(card);
+    }
+
+    function navBtns(showBack = true) {
+      const label = vStep === 3 ? 'Submit Application' : 'Continue →';
+      return `<div class="vendor-nav">
+        ${showBack ? `<button class="btn btn-outline btn-lg" style="flex:1" onclick="vStep--;renderVStep()">← Back</button>` : ''}
+        <button class="btn btn-primary btn-lg" style="flex:1" onclick="vStep++;renderVStep()">${label}</button>
+      </div>`;
+    }
+
+    function renderVStep1(card) {
+      card.innerHTML = `
+        <h2>Personal Information</h2>
+        <div class="vendor-fields">
+          <div class="form-group"><label class="form-label">Full Name</label><input class="input" placeholder="Ahmed Ali" /></div>
+          <div class="form-group"><label class="form-label">Email Address</label><input class="input" type="email" placeholder="you@example.com" /></div>
+          <div class="form-group"><label class="form-label">Phone Number</label><input class="input" type="tel" placeholder="+20 100 000 0000" /></div>
+          <div class="form-group"><label class="form-label">National ID / Passport</label><input class="input" placeholder="ID number" /></div>
+        </div>
+        ${navBtns(false)}`;
+    }
+
+    function renderVStep2(card) {
+      card.innerHTML = `
+        <h2>Business Information</h2>
+        <div class="vendor-fields">
+          <div class="form-group"><label class="form-label">Business Name</label><input class="input" placeholder="Your Brand Name" /></div>
+          <div class="form-group"><label class="form-label">Business Type</label>
+            <select class="input">
+              <option value="">Select type…</option>
+              <option>Sole Proprietorship</option>
+              <option>Partnership</option>
+              <option>LLC / Corporation</option>
+              <option>Freelancer / Artisan</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Business Category</label>
+            <select class="input">
+              <option value="">Select category…</option>
+              <option>Fashion & Apparel</option>
+              <option>Home & Decor</option>
+              <option>Food & Beverages</option>
+              <option>Beauty & Personal Care</option>
+              <option>Electronics & Tech</option>
+              <option>Arts & Crafts</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Business Address</label><input class="input" placeholder="123 Main St, Cairo" /></div>
+          <div class="form-group"><label class="form-label">Website / Social Media (optional)</label><input class="input" placeholder="https://instagram.com/yourbrand" /></div>
+        </div>
+        ${navBtns()}`;
+    }
+
+    function renderVStep3(card) {
+      card.innerHTML = `
+        <h2>Documents & Agreement</h2>
+        <div class="docs-info">
+          <h4>Required Documents</h4>
+          <p>Please upload clear photos or scans of the following:</p>
+          <ul>
+            <li>National ID or Passport (front & back)</li>
+            <li>Business registration certificate (if applicable)</li>
+            <li>Tax registration card (if applicable)</li>
+          </ul>
+          <p class="docs-note">Accepted formats: JPG, PNG, PDF — max 5MB each. Processing takes 1–3 business days.</p>
+        </div>
+        <div class="vendor-fields">
+          <div class="form-group"><label class="form-label">National ID / Passport</label><input class="input" type="file" accept=".jpg,.png,.pdf" /></div>
+          <div class="form-group"><label class="form-label">Business Certificate (optional)</label><input class="input" type="file" accept=".jpg,.png,.pdf" /></div>
+        </div>
+        <label class="filter-label" style="margin:1rem 0">
+          <input type="checkbox" style="accent-color:var(--primary)" required />
+          I agree to Mostra's <a href="terms.html" style="color:var(--primary)">Vendor Terms</a> and <a href="privacy.html" style="color:var(--primary)">Privacy Policy</a>
+        </label>
+        ${navBtns()}`;
+    }
+
+    function renderVSuccess(card) {
+      card.innerHTML = `
+        <div class="vendor-success">
+          <div class="vendor-success__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h2>Application Submitted! 🎉</h2>
+          <p>Thank you for applying to become a Mostra vendor. Our team will review your application and contact you within 1–3 business days.</p>
+          <div class="vendor-success__actions">
+            <a href="vendor-dashboard.html" class="btn btn-primary btn-lg">Go to Dashboard</a>
+            <a href="index.html" class="btn btn-outline btn-lg">Back to Home</a>
+          </div>
+        </div>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', renderVStep);
+  </script>
+</body>
+</html>

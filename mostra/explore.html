@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore – Mostra</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/explore.css" />
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="container">
+        <h1 class="page-header__title">Explore Products</h1>
+        <p class="page-header__subtitle">Discover thousands of unique local products</p>
+      </div>
+    </div>
+
+    <div class="container explore-layout">
+
+      <!-- Sidebar Filters -->
+      <aside class="sidebar" id="sidebar">
+        <div class="filter-card">
+          <div class="filter-card__header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            Filters
+          </div>
+
+          <!-- Category Filter -->
+          <div class="filter-section">
+            <h4 class="filter-section__title">Category</h4>
+            <div class="filter-group" id="filter-categories">
+              <!-- JS -->
+            </div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="filter-section">
+            <h4 class="filter-section__title">Price Range</h4>
+            <div class="price-range">
+              <input type="number" class="input" id="price-min" placeholder="Min" min="0" value="0" />
+              <span>–</span>
+              <input type="number" class="input" id="price-max" placeholder="Max" min="0" value="500" />
+            </div>
+          </div>
+
+          <!-- Rating Filter -->
+          <div class="filter-section">
+            <h4 class="filter-section__title">Minimum Rating</h4>
+            <div class="filter-group">
+              <label class="filter-label" data-rating="4">
+                <input type="radio" name="rating" value="4" /> ★★★★ & up
+              </label>
+              <label class="filter-label" data-rating="3">
+                <input type="radio" name="rating" value="3" /> ★★★ & up
+              </label>
+              <label class="filter-label" data-rating="0" class="active">
+                <input type="radio" name="rating" value="0" checked /> All ratings
+              </label>
+            </div>
+          </div>
+
+          <!-- New Arrivals -->
+          <div class="filter-section">
+            <label class="filter-label">
+              <input type="checkbox" id="filter-new" /> New Arrivals Only
+            </label>
+          </div>
+
+          <button class="btn btn-outline" style="width:100%" id="clear-filters">Clear Filters</button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="explore-main">
+
+        <!-- Toolbar -->
+        <div class="explore-toolbar">
+          <div class="explore-toolbar__left">
+            <!-- Mobile filter button -->
+            <button class="btn btn-outline btn-sm explore-filter-toggle" id="mobile-filter-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+              Filters
+            </button>
+            <span class="explore-count" id="product-count">Loading...</span>
+          </div>
+          <div class="explore-toolbar__right">
+            <label for="sort-select" class="sr-only">Sort by</label>
+            <select class="input" id="sort-select" style="width:auto;padding:0.375rem 0.75rem">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="explore-products">
+          <!-- JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display:none">
+          <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+          <h3>No products found</h3>
+          <p>Try adjusting your filters</p>
+          <button class="btn btn-primary" onclick="clearFilters()">Clear Filters</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Filter Modal -->
+    <div class="filter-modal" id="filter-modal">
+      <div class="filter-modal__backdrop" id="filter-backdrop"></div>
+      <div class="filter-modal__panel" id="filter-panel">
+        <div class="filter-modal__header">
+          <span>Filters</span>
+          <button id="close-filter" aria-label="Close">✕</button>
+        </div>
+        <div id="filter-modal-body">
+          <!-- Clone of sidebar filters -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/explore.js"></script>
+</body>
+</html>

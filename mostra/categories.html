@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categories – Mostra</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <style>
+    .cat-hero { padding: 3rem 0; background: var(--surface); border-bottom: 1px solid var(--border); text-align: center; }
+    .cat-hero h1 { font-size: 2.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
+    .cat-hero p { color: var(--text-secondary); font-size: 1.125rem; }
+
+    .all-categories { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    @media (min-width: 640px) { .all-categories { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1024px) { .all-categories { grid-template-columns: repeat(4, 1fr); } }
+
+    .cat-card-big {
+      background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem;
+      padding: 2rem 1.5rem; text-align: center; cursor: pointer; transition: all .3s;
+      text-decoration: none; display: block;
+    }
+    .cat-card-big:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .cat-card-big:hover .cat-card-big__name { color: var(--primary); }
+    .cat-card-big__icon { font-size: 3rem; margin-bottom: 1rem; }
+    .cat-card-big__name { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; transition: color .2s; }
+    .cat-card-big__count { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .cat-card-big__bar { height: 0.25rem; background: var(--surface); border-radius: 9999px; overflow: hidden; }
+    .cat-card-big__fill { height: 100%; background: var(--primary); border-radius: 9999px; }
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+    <div class="cat-hero">
+      <div class="container">
+        <h1>All Categories</h1>
+        <p>Browse thousands of products across every category</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-top:2.5rem;padding-bottom:4rem">
+      <div class="all-categories" id="all-categories-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const CATS = [
+      { id:'fashion',     icon:'👗', name:'Fashion & Apparel',  count:1240, pct:85 },
+      { id:'electronics', icon:'📱', name:'Electronics & Tech', count:856,  pct:72 },
+      { id:'home-decor',  icon:'🏠', name:'Home & Decor',       count:632,  pct:60 },
+      { id:'food',        icon:'🍕', name:'Food & Beverages',   count:421,  pct:45 },
+      { id:'beauty',      icon:'💄', name:'Beauty & Care',      count:389,  pct:42 },
+      { id:'sports',      icon:'⚽', name:'Sports & Outdoors',  count:278,  pct:32 },
+      { id:'books',       icon:'📚', name:'Books & Stationery', count:195,  pct:25 },
+      { id:'toys',        icon:'🧸', name:'Toys & Kids',        count:314,  pct:38 },
+      { id:'jewelry',     icon:'💍', name:'Jewelry & Watches',  count:267,  pct:30 },
+      { id:'art',         icon:'🎨', name:'Art & Handmade',     count:453,  pct:50 },
+      { id:'plants',      icon:'🌿', name:'Plants & Garden',    count:182,  pct:22 },
+      { id:'pets',        icon:'🐾', name:'Pet Supplies',       count:144,  pct:18 },
+    ];
+
+    document.getElementById('all-categories-grid').innerHTML = CATS.map(c => `
+      <a href="explore.html?category=${c.id}" class="cat-card-big">
+        <div class="cat-card-big__icon">${c.icon}</div>
+        <h3 class="cat-card-big__name">${c.name}</h3>
+        <p class="cat-card-big__count">${c.count.toLocaleString()} products</p>
+        <div class="cat-card-big__bar">
+          <div class="cat-card-big__fill" style="width:${c.pct}%"></div>
+        </div>
+      </a>`).join('');
+  </script>
+</body>
+</html>

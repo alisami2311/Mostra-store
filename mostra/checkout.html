@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – Mostra</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <style>
+    /* ---- Checkout Page ---- */
+    .checkout-page { padding: 2rem 0 4rem; }
+    .checkout-title { font-size: 1.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2rem; }
+
+    /* Steps */
+    .steps { margin-bottom: 3rem; }
+    .steps-row {
+      display: flex; align-items: center; justify-content: center;
+      max-width: 48rem; margin: 0 auto 1rem;
+    }
+    .step-item { display: flex; align-items: center; flex: 1; }
+    .step-circle {
+      width: 3rem; height: 3rem; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.125rem; font-weight: 500; transition: all .2s;
+      flex-shrink: 0;
+    }
+    .step-circle.active   { background: var(--primary); color: #fff; }
+    .step-circle.done     { background: var(--success);  color: #fff; }
+    .step-circle.inactive { background: var(--surface); border: 2px solid var(--border); color: var(--text-muted); }
+    .step-line { flex: 1; height: 2px; margin: 0 0.5rem; }
+    .step-line.done     { background: var(--primary); }
+    .step-line.inactive { background: var(--border); }
+    .step-labels {
+      display: flex; justify-content: space-between;
+      max-width: 48rem; margin: 0 auto;
+    }
+    .step-labels span { font-size: 0.875rem; text-align: center; flex: 1; color: var(--text-secondary); }
+    .step-labels span.active { color: var(--primary); font-weight: 500; }
+
+    /* Form card */
+    .checkout-form-card {
+      max-width: 56rem; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 0.75rem; padding: 1.5rem;
+    }
+    @media (min-width: 768px) { .checkout-form-card { padding: 2rem; } }
+    .checkout-form-card h2 { font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.5rem; }
+
+    /* Field grid */
+    .field-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 768px) { .field-grid { grid-template-columns: repeat(2, 1fr); } }
+    .field-full { grid-column: 1 / -1; }
+
+    /* Nav buttons */
+    .checkout-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 2rem; gap: 1rem;
+    }
+    .checkout-nav.center { justify-content: center; }
+
+    /* Payment summary */
+    .payment-layout { display: flex; flex-direction: column; gap: 1.5rem; }
+    .summary-box { background: var(--surface); border-radius: 0.75rem; padding: 1.5rem; }
+    .summary-box h3 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .summary-row.total { border-top: 1px solid var(--border); padding-top: 0.5rem; margin-top: 0.5rem; font-size: 1.125rem; font-weight: 600; color: var(--text-primary); }
+
+    /* Success */
+    .success-screen { text-align: center; padding: 3rem 0; }
+    .success-icon {
+      width: 5rem; height: 5rem; background: rgba(16,185,129,.1); border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .success-icon svg { width: 2.5rem; height: 2.5rem; color: var(--success); }
+    .success-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; }
+    .success-msg { font-size: 1rem; line-height: 1.75; color: var(--text-secondary); margin-bottom: 2rem; max-width: 28rem; margin-left: auto; margin-right: auto; }
+    .order-num-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem;
+      padding: 1.5rem; max-width: 28rem; margin: 0 auto 2rem;
+    }
+    .order-num-card p { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .order-num-card span { font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+    <div class="container checkout-page">
+      <h1 class="checkout-title">Checkout</h1>
+
+      <!-- Steps -->
+      <div class="steps" id="steps-ui"></div>
+
+      <!-- Step content -->
+      <div id="checkout-content"></div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let step = 1;
+    const STEPS = ['Shipping', 'Payment', 'Confirmed'];
+
+    function renderSteps() {
+      document.getElementById('steps-ui').innerHTML = `
+        <div class="steps-row">
+          ${STEPS.map((s, i) => {
+            const n = i + 1;
+            const cls = n < step ? 'done' : n === step ? 'active' : 'inactive';
+            const icon = n < step ? '✓' : n;
+            return `
+              <div class="step-item">
+                <div class="step-circle ${cls}">${icon}</div>
+                ${i < STEPS.length - 1 ? `<div class="step-line ${n < step ? 'done' : 'inactive'}"></div>` : ''}
+              </div>`;
+          }).join('')}
+        </div>
+        <div class="step-labels">
+          ${STEPS.map((s, i) => `<span class="${i+1 === step ? 'active' : ''}">${s}</span>`).join('')}
+        </div>`;
+    }
+
+    function renderStep() {
+      renderSteps();
+      if (step === 1) renderShipping();
+      else if (step === 2) renderPayment();
+      else renderConfirm();
+    }
+
+    function renderShipping() {
+      document.getElementById('checkout-content').innerHTML = `
+        <div class="checkout-form-card">
+          <h2>Shipping Address</h2>
+          <div class="field-grid">
+            <div class="form-group"><label class="form-label">First Name</label><input class="input" placeholder="Ahmed" /></div>
+            <div class="form-group"><label class="form-label">Last Name</label><input class="input" placeholder="Ali" /></div>
+            <div class="form-group field-full"><label class="form-label">Email</label><input class="input" type="email" placeholder="you@example.com" /></div>
+            <div class="form-group field-full"><label class="form-label">Phone</label><input class="input" type="tel" placeholder="+20 100 000 0000" /></div>
+            <div class="form-group field-full"><label class="form-label">Address</label><input class="input" placeholder="123 Main St" /></div>
+            <div class="form-group"><label class="form-label">City</label><input class="input" placeholder="Cairo" /></div>
+            <div class="form-group"><label class="form-label">Postal Code</label><input class="input" placeholder="11511" /></div>
+            <div class="form-group field-full"><label class="form-label">Country</label>
+              <select class="input">
+                <option>Egypt</option><option>Saudi Arabia</option><option>UAE</option>
+                <option>Jordan</option><option>Kuwait</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkout-nav">
+            <a href="cart.html" class="btn btn-outline btn-lg">← Back to Cart</a>
+            <button class="btn btn-primary btn-lg" onclick="step=2;renderStep()">
+              Continue to Payment →
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function renderPayment() {
+      const subtotal = Cart.total() || 49.99;
+      const shipping = subtotal > 50 ? 0 : 5.99;
+      const total = subtotal + shipping;
+      document.getElementById('checkout-content').innerHTML = `
+        <div class="checkout-form-card">
+          <div class="payment-layout">
+            <div>
+              <h2>Payment Details</h2>
+              <div class="field-grid">
+                <div class="form-group field-full"><label class="form-label">Card Number</label><input class="input" placeholder="1234 5678 9012 3456" maxlength="19" /></div>
+                <div class="form-group field-full"><label class="form-label">Cardholder Name</label><input class="input" placeholder="Ahmed Ali" /></div>
+                <div class="form-group"><label class="form-label">Expiry Date</label><input class="input" placeholder="MM / YY" maxlength="7" /></div>
+                <div class="form-group"><label class="form-label">CVV</label><input class="input" placeholder="123" maxlength="4" /></div>
+              </div>
+            </div>
+            <div class="summary-box">
+              <h3>Order Summary</h3>
+              <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+              <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2)}</span></div>
+              <div class="summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+            </div>
+          </div>
+          <div class="checkout-nav">
+            <button class="btn btn-outline btn-lg" onclick="step=1;renderStep()">← Back</button>
+            <button class="btn btn-primary btn-lg" onclick="placeOrder()">
+              Place Order →
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function placeOrder() {
+      // Clear cart
+      Cart.items = [];
+      localStorage.setItem('mostra-cart', '[]');
+      Cart.updateBadge();
+      step = 3;
+      renderStep();
+    }
+
+    function renderConfirm() {
+      const orderId = 'MST-' + Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('checkout-content').innerHTML = `
+        <div class="checkout-form-card">
+          <div class="success-screen">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h2 class="success-title">Order Confirmed! 🎉</h2>
+            <p class="success-msg">Thank you for your purchase! Your order has been confirmed and will be delivered within 3–5 business days.</p>
+            <div class="order-num-card">
+              <p>Your Order Number</p>
+              <span>${orderId}</span>
+            </div>
+            <div class="checkout-nav center" style="gap:1rem;flex-wrap:wrap">
+              <a href="profile.html#orders" class="btn btn-primary btn-lg">View My Orders</a>
+              <a href="index.html" class="btn btn-outline btn-lg">Continue Shopping</a>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', renderStep);
+  </script>
+</body>
+</html>
